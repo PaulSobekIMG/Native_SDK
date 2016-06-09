@@ -32,10 +32,11 @@ bool loadShader(const native::HContext_& context, Stream& shaderData, types::Sha
 \param numDefines The number of defines
 \param[out] outShader The native Shader object will be saved here
 \param contextCapabilities Optional A pointer to the API capabilities can be passed here
+\param versionOverride Optional. The API version string to replace #version definition with
 \return true on success
 ***********************************************************************************************************************/
 bool loadShader(const native::HContext_& context, const Stream& shaderSource, types::ShaderType::Enum shaderType, const char* const* defines,
-	uint32 numDefines, native::HShader_& outShader, const ApiCapabilities* contextCapabilities = 0);
+	uint32 numDefines, native::HShader_& outShader, const ApiCapabilities* contextCapabilities = 0, Api::Enum versionOverride = Api::Enum::Unspecified);
 
 }
 }

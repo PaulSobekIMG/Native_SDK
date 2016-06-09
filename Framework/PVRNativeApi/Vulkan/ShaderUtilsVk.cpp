@@ -13,7 +13,7 @@ bool loadShader(const native::HContext_& context, Stream& shaderData, types::Sha
 }
 
 
-bool loadShader(const native::HContext_& context, const Stream& shaderSource, types::ShaderType::Enum shaderType, const char* const* defines, uint32 numDefines, native::HShader_& outShader, const ApiCapabilities* apiCapabilities)
+bool loadShader(const native::HContext_& context, const Stream& shaderSource, types::ShaderType::Enum shaderType, const char* const* defines, uint32 numDefines, native::HShader_& outShader, const ApiCapabilities* apiCapabilities, Api::Enum versionOverride)
 {
 	if (!shaderSource.isopen() && !shaderSource.open())
 	{

@@ -14,7 +14,7 @@ namespace pvr {
 namespace utils {
 
 bool loadShader(const native::HContext_& context, const Stream& shaderSource, types::ShaderType::Enum shaderType, const char* const* defines, uint32 defineCount,
-                pvr::native::HShader_& outShader, const ApiCapabilities* contextCapabilities)
+                pvr::native::HShader_& outShader, const ApiCapabilities* contextCapabilities, const Api::Enum versionOverride)
 {
 	if (!shaderSource.isopen() && !shaderSource.open())
 	{
@@ -61,23 +61,52 @@ bool loadShader(const native::HContext_& context, const Stream& shaderSource, ty
 	string::size_type versBegin = shaderSrc.find("#version");
 	string::size_type versEnd = 0;
 	string sourceDataStr;
-	if (versBegin != string::npos)
-	{
-		versEnd = shaderSrc.find("\n", versBegin);
-		sourceDataStr.append(shaderSrc.begin() + versBegin, shaderSrc.begin() + versBegin + versEnd);
-		sourceDataStr.append("\n");
+	if (versionOverride == Api::Enum::Unspecified) {
+		// Take version string verbatim 
+		if (versBegin != string::npos)
+		{
+			versEnd = shaderSrc.find("\n", versBegin);
+			sourceDataStr.append(shaderSrc.begin() + versBegin, shaderSrc.begin() + versBegin + versEnd);
+			sourceDataStr.append("\n");
+		}
+		else
+		{
+			versBegin = 0;
+		}
 	}
-	else
+	else 
 	{
-		versBegin = 0;
+		// Replace version string with target API
+		switch (versionOverride)
+		{
+		case Api::Enum::OpenGLES2:
+			sourceDataStr.append("#version 100\n");
+			break;
+		case Api::Enum::OpenGLES3:
+			sourceDataStr.append("#version 300 es\n");
+			break;
+		case Api::Enum::OpenGLES31:
+			sourceDataStr.append("#version 310 es\n");
+			break;
+		default:
+			Log(Log.Error, "Version over-ride is unknown");
+			return false;
+		}
+		
+		if (versBegin != string::npos)
+		{
+			versEnd = shaderSrc.find("\n", versBegin);
+		}
+
 	}
-	// insert the defines
-	for (uint32 i = 0; i < defineCount; ++i)
-	{
-		sourceDataStr.append("#define ");
-		sourceDataStr.append(defines[i]);
-		sourceDataStr.append("\n");
-	}
+		// insert the defines
+		for (uint32 i = 0; i < defineCount; ++i)
+		{
+			sourceDataStr.append("#define ");
+			sourceDataStr.append(defines[i]);
+			sourceDataStr.append("\n");
+		}
+	
 	sourceDataStr.append("\n");
 	sourceDataStr.append(shaderSrc.begin() + versBegin + versEnd, shaderSrc.end());
 	const char* pSource = sourceDataStr.c_str();

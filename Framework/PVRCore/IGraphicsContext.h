@@ -373,8 +373,9 @@ public:
 	\param shaderType The type of shader to create
 	\param defines Optional. A pointer to an array of c-style strings containing  preprocessor definition directives
 	\param numDefines Optional. The number of items in the defines array.
+	\param versionOverride Optional. The API version string to replace #version definition with
 	************************************************************************************************/
-	api::Shader createShader(const Stream& shaderSrc, types::ShaderType::Enum shaderType, const char* const* defines = NULL, uint32 numDefines = 0);
+	api::Shader createShader(const Stream& shaderSrc, types::ShaderType::Enum shaderType, const char* const* defines = NULL, uint32 numDefines = 0, Api::Enum versionOverride = Api::Enum::Unspecified);
 
 	/*!*********************************************************************************************
 	\brief Create Shader from binary.

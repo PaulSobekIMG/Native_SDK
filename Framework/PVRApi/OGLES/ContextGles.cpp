@@ -444,11 +444,11 @@ api::Sampler IGraphicsContext::createSampler(const assets::SamplerCreateParam& d
 	return sampler;
 }
 
-api::Shader IGraphicsContext::createShader(const Stream& shaderSrc, types::ShaderType::Enum type, const char* const* defines, uint32 numDefines)
+api::Shader IGraphicsContext::createShader(const Stream& shaderSrc, types::ShaderType::Enum type, const char* const* defines, uint32 numDefines, pvr::Api::Enum versionOverride)
 {
 	api::gles::ShaderGles vs;
 	vs.construct(getWeakRef(), 0);
-	if (!utils::loadShader(native::HContext_(), shaderSrc, type, defines, numDefines, *vs, &m_apiCapabilities))
+	if (!utils::loadShader(native::HContext_(), shaderSrc, type, defines, numDefines, *vs, &m_apiCapabilities, versionOverride))
 	{
 		Log(Log.Error, "Failed to create Shader.");
 		vs.reset();

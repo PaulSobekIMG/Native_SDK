@@ -205,10 +205,10 @@ api::Buffer IGraphicsContext::createBuffer(uint32 size, types::BufferBindingUse:
 	return buffer;
 }
 
-api::Shader IGraphicsContext::createShader(const Stream& shaderSrc, types::ShaderType::Enum type, const char* const* defines, uint32 numDefines)
+api::Shader IGraphicsContext::createShader(const Stream& shaderSrc, types::ShaderType::Enum type, const char* const* defines, uint32 numDefines, Api::Enum versionOverride)
 {
 	api::vulkan::ShaderVk vs; vs.construct(getWeakRef());
-	if (!utils::loadShader(static_cast<platform::ContextVk&>(*this).getContextHandle(), shaderSrc, type, defines, numDefines, *vs, &m_apiCapabilities))
+	if (!utils::loadShader(static_cast<platform::ContextVk&>(*this).getContextHandle(), shaderSrc, type, defines, numDefines, *vs, &m_apiCapabilities, versionOverride))
 	{
 		Log(Log.Error, "Failed to create VertexShader.");
 		vs.reset();
